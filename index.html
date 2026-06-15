@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>경북 청년인재스쿨</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F5F4F9;color:#1a1a1a;font-size:14px}
+
+/* Nav */
+nav{background:#5B4FCF;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.nav-logo{color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px}
+.nav-links{display:flex;gap:4px}
+.nav-link{color:rgba(255,255,255,0.75);font-size:13px;padding:6px 12px;border-radius:6px;cursor:pointer;border:none;background:none;transition:background 0.15s}
+.nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.15);color:#fff}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-badge{background:rgba(255,255,255,0.2);color:#fff;font-size:12px;padding:4px 10px;border-radius:20px}
+.avatar{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:500}
+.lv-badge{background:rgba(255,255,255,0.15);color:#FFD166;font-size:12px;padding:3px 8px;border-radius:20px}
+
+/* Page switcher */
+.page-tab-bar{background:#fff;border-bottom:0.5px solid #e5e3f0;display:flex;gap:0;padding:0 24px}
+.page-tab{padding:12px 18px;font-size:13px;color:#888;border-bottom:2px solid transparent;cursor:pointer;border-top:none;border-left:none;border-right:none;background:none;transition:color 0.15s}
+.page-tab:hover{color:#5B4FCF}
+.page-tab.active{color:#5B4FCF;border-bottom-color:#5B4FCF;font-weight:500}
+
+/* Pages */
+.page{display:none;padding:24px}
+.page.active{display:block}
+
+/* Common */
+.content{}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.card{background:#fff;border:0.5px solid #e8e6f0;border-radius:12px;padding:18px 20px}
+.card-title{font-size:13px;font-weight:500;color:#666;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.badge{display:inline-flex;align-items:center;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500}
+.b-purple{background:#EEEDFE;color:#3C3489}
+.b-green{background:#EAF3DE;color:#27500A}
+.b-amber{background:#FAEEDA;color:#633806}
+.b-red{background:#FCEBEB;color:#791F1F}
+.b-gray{background:#F1EFE8;color:#444441}
+.progress-bar{height:5px;background:#f0eef8;border-radius:3px;margin-top:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:#5B4FCF}
+.progress-fill.green{background:#3B6D11}
+.progress-fill.amber{background:#BA7517}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;color:#888;font-weight:500;padding:8px 10px;border-bottom:0.5px solid #e8e6f0;font-size:12px;cursor:pointer;user-select:none}
+th:hover{color:#5B4FCF}
+td{padding:9px 10px;border-bottom:0.5px solid #f0eef8;color:#1a1a1a;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#faf9fe}
+.action-btn{background:none;border:0.5px solid #ddd;border-radius:6px;padding:4px 10px;font-size:12px;color:#666;cursor:pointer}
+.action-btn:hover{background:#f5f4f9}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#3C3489;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.2s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Modal */
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center}
+.modal-backdrop.open{display:flex}
+.modal{background:#fff;border-radius:12px;padding:24px;width:360px;border:0.5px solid #e8e6f0}
+.modal-title{font-size:15px;font-weight:500;margin-bottom:16px}
+.modal label{font-size:12px;color:#666;display:block;margin-bottom:4px;margin-top:12px}
+.modal input,.modal select{width:100%;padding:8px 10px;font-size:13px;border:0.5px solid #ccc;border-radius:6px;background:#fff;color:#1a1a1a}
+.modal-actions{display:flex;gap:8px;margin-top:20px;justify-content:flex-end}
+.btn-primary{background:#5B4FCF;color:#fff;border:none;border-radius:6px;padding:8px 18px;font-size:13px;cursor:pointer}
+.btn-cancel{background:none;border:0.5px solid #ddd;border-radius:6px;padding:8px 18px;font-size:13px;color:#666;cursor:pointer}
+
+/* ===== PAGE 1: 관리자 대시보드 ===== */
+.hero{background:#5B4FCF;border-radius:12px;padding:28px 32px;margin-bottom:20px;color:#fff;display:flex;justify-content:space-between;align-items:flex-start}
+.hero-eyebrow{font-size:11px;letter-spacing:0.08em;color:rgba(255,255,255,0.6);margin-bottom:8px;text-transform:uppercase}
+.hero-title{font-size:28px;font-weight:500;line-height:1.2;margin-bottom:8px}
+.hero-title span{color:#FFD166}
+.hero-sub{font-size:14px;color:rgba(255,255,255,0.75);line-height:1.6}
+.hero-sub strong{color:#fff}
+.hero-right{display:flex;flex-direction:column;gap:10px;min-width:200px}
+.kpi-card{background:rgba(255,255,255,0.12);border-radius:10px;padding:14px 18px;border:1px solid rgba(255,255,255,0.15)}
+.kpi-label{font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:4px}
+.kpi-value{font-size:22px;font-weight:500;color:#fff}
+.kpi-delta{font-size:12px;color:#7EEFC5;margin-left:6px}
+.kpi-delta.warn{color:#FFD166}
+.stat-big{font-size:28px;font-weight:500;color:#1a1a1a}
+.stat-sub{font-size:13px;color:#888;margin-top:4px}
+.queue-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid #f0eef8}
+.queue-item:last-child{border-bottom:none}
+.queue-name{font-size:13px;font-weight:500}
+.queue-meta{font-size:12px;color:#888;margin-top:2px}
+.queue-time{font-size:12px;color:#888}
+.queue-time.warn{color:#BA7517}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ===== PAGE 3: 참여자 대시보드 ===== */
+.greeting{background:#5B4FCF;border-radius:12px;padding:22px 28px;margin-bottom:18px;color:#fff}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.kpi{background:rgba(255,255,255,0.12);border-radius:10px;padding:12px 14px;border:1px solid rgba(255,255,255,0.15)}
+.kpi .kpi-label{font-size:11px;color:rgba(255,255,255,0.65);margin-bottom:4px}
+.kpi .kpi-val{font-size:20px;font-weight:500;color:#fff}
+.kpi .kpi-delta{font-size:11px;color:#7EEFC5;margin-top:2px}
+.stage-track{display:flex;align-items:center;margin-top:4px}
+.stage-step{flex:1;text-align:center;position:relative}
+.stage-step:not(:last-child)::after{content:'';position:absolute;top:14px;left:50%;width:100%;height:2px;background:#e8e6f0;z-index:0}
+.stage-step.done::after{background:#5B4FCF}
+.stage-dot{width:28px;height:28px;border-radius:50%;border:2px solid #e8e6f0;background:#fff;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;position:relative;z-index:1;color:#888}
+.stage-step.done .stage-dot{background:#5B4FCF;border-color:#5B4FCF;color:#fff}
+.stage-step.current .stage-dot{background:#fff;border-color:#5B4FCF;color:#5B4FCF;box-shadow:0 0 0 3px rgba(91,79,207,0.2)}
+.stage-step.current::after{background:#e8e6f0}
+.stage-label{font-size:10px;color:#888;line-height:1.3}
+.stage-step.current .stage-label{color:#5B4FCF;font-weight:500}
+.mission-item{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:0.5px solid #f0eef8}
+.mission-item:last-child{border-bottom:none}
+.mission-check{width:20px;height:20px;border-radius:50%;border:1.5px solid #ccc;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
+.mission-check.done{background:#5B4FCF;border-color:#5B4FCF;color:#fff}
+.mission-text{font-size:13px;flex:1}
+.mission-text.done{text-decoration:line-through;color:#aaa}
+.mission-due{font-size:11px;color:#888;margin-top:2px}
+.mission-due.urgent{color:#BA7517}
+.act-icon{width:32px;height:32px;border-radius:8px;background:#EEEDFE;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#534AB7;font-size:16px}
+.activity-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:0.5px solid #f0eef8}
+.activity-item:last-child{border-bottom:none}
+.job-card{display:flex;align-items:flex-start;justify-content:space-between;padding:10px 0;border-bottom:0.5px solid #f0eef8}
+.job-card:last-child{border-bottom:none}
+.prog-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.prog-label{font-size:12px;color:#888;width:56px;flex-shrink:0}
+.prog-bg{flex:1;height:5px;background:#f0eef8;border-radius:3px;overflow:hidden}
+.prog-fill-bar{height:100%;border-radius:3px;background:#5B4FCF}
+.prog-fill-bar.g{background:#3B6D11}
+.prog-fill-bar.a{background:#BA7517}
+.prog-val{font-size:12px;width:30px;text-align:right;flex-shrink:0}
+.ph-item{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid #f0eef8;font-size:12px}
+.ph-item:last-child{border-bottom:none}
+.ph-plus{color:#27500A;font-weight:500}
+</style>
+</head>
+<body>
+
+<!-- 공통 네비게이션 -->
+<nav id="main-nav">
+  <div class="nav-logo"><i class="ti ti-school"></i> 경북 청년인재스쿨</div>
+  <div class="nav-links" id="nav-links"></div>
+  <div class="nav-right" id="nav-right"></div>
+</nav>
+
+<!-- 페이지 탭 -->
+<div class="page-tab-bar">
+  <button class="page-tab active" onclick="switchPage('admin')">관리자 대시보드</button>
+  <button class="page-tab" onclick="switchPage('table')">참여자 전체 목록</button>
+  <button class="page-tab" onclick="switchPage('participant')">참여자 대시보드</button>
+</div>
+
+<!-- ===== PAGE 1: 관리자 대시보드 ===== -->
+<div class="page active" id="page-admin">
+  <div class="hero">
+    <div>
+      <div class="hero-eyebrow">Operations Insight · 운영 인사이트</div>
+      <div class="hero-title"><span id="hero-count">32</span>명의 청년이<br>경북에서 취업하기까지</div>
+      <div class="hero-sub">지금까지 <strong id="hero-employed">12명</strong>이 첫 직장을 찾았고,<br>나머지는 평균 <strong>6단계</strong>를 진행하고 있어요.</div>
+      <div style="margin-top:12px">
+        <button class="action-btn" style="border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8);background:none" onclick="openModal()">+ 참여자 추가</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="kpi-card"><div class="kpi-label">평균 제출률</div><div><span class="kpi-value">84.5%</span><span class="kpi-delta">▲ 6.2p</span></div></div>
+      <div class="kpi-card"><div class="kpi-label">경북 취업률</div><div><span class="kpi-value">67%</span><span class="kpi-delta">▲ 2명</span></div></div>
+      <div class="kpi-card"><div class="kpi-label">검토 대기</div><div><span class="kpi-value">8건</span><span class="kpi-delta warn">평균 6.2h</span></div></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-users"></i> 전체 참여자</div>
+      <div class="stat-big" id="stat-total">32명</div>
+      <div class="stat-sub">활성 28명 · 수료 4명</div>
+      <div class="progress-bar"><div class="progress-fill" style="width:87.5%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-file-check"></i> 오늘 검토</div>
+      <div class="stat-big">8건</div>
+      <div class="stat-sub">가입 승인 대기 4명</div>
+      <div class="progress-bar"><div class="progress-fill amber" style="width:60%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-alarm"></i> 마감 임박</div>
+      <div class="stat-big">5건</div>
+      <div class="stat-sub">오늘 마감 2건 · 내일 3건</div>
+      <div class="progress-bar"><div class="progress-fill amber" style="width:40%"></div></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="card-title" style="margin-bottom:0"><i class="ti ti-list"></i> 검토 대기 목록</div>
+        <button class="action-btn">전체보기</button>
+      </div>
+      <div class="queue-item"><div><div class="queue-name">김이음</div><div class="queue-meta">자기소개서 2차 제출</div></div><div style="text-align:right"><span class="badge b-amber">검토중</span><div class="queue-time warn" style="margin-top:4px">6.2h 경과</div></div></div>
+      <div class="queue-item"><div><div class="queue-name">박하늘</div><div class="queue-meta">입사지원서 제출</div></div><div style="text-align:right"><span class="badge b-red">긴급</span><div class="queue-time warn" style="margin-top:4px">12h 경과</div></div></div>
+      <div class="queue-item"><div><div class="queue-name">이서연</div><div class="queue-meta">면접 준비 완료 확인</div></div><div style="text-align:right"><span class="badge b-purple">신규</span><div class="queue-time" style="margin-top:4px">1h 경과</div></div></div>
+      <div class="queue-item"><div><div class="queue-name">최민준</div><div class="queue-meta">가입 승인 요청</div></div><div style="text-align:right"><span class="badge b-green">승인대기</span><div class="queue-time" style="margin-top:4px">30분 경과</div></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:10px"><i class="ti ti-chart-donut"></i> 활동 현황 비율</div>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:4px">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#EEEDFE" stroke-width="14"/>
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#5B4FCF" stroke-width="14" stroke-dasharray="98.9 121" stroke-dashoffset="0" transform="rotate(-90 45 45)"/>
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#3B6D11" stroke-width="14" stroke-dasharray="56.5 163.4" stroke-dashoffset="-98.9" transform="rotate(-90 45 45)"/>
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#BA7517" stroke-width="14" stroke-dasharray="28.3 191.6" stroke-dashoffset="-155.4" transform="rotate(-90 45 45)"/>
+          <circle cx="45" cy="45" r="35" fill="none" stroke="#D4537E" stroke-width="14" stroke-dasharray="18.8 200.9" stroke-dashoffset="-183.7" transform="rotate(-90 45 45)"/>
+        </svg>
+        <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#666"><div class="legend-dot" style="background:#5B4FCF"></div>학습활동 45%</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#666"><div class="legend-dot" style="background:#3B6D11"></div>취업활동 30%</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#666"><div class="legend-dot" style="background:#BA7517"></div>멘토링 15%</div>
+          <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:#666"><div class="legend-dot" style="background:#D4537E"></div>기타 10%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="card-title" style="margin-bottom:0"><i class="ti ti-users"></i> 참여자 현황</div>
+      <button class="action-btn" onclick="switchPage('table')">전체 목록 보기</button>
+    </div>
+    <table>
+      <thead><tr><th>이름</th><th>단계</th><th>제출률</th><th>취업현황</th><th>최근활동</th><th></th></tr></thead>
+      <tbody id="admin-table">
+        <tr><td style="font-weight:500">김이음</td><td><span class="badge b-purple">4단계</span></td><td>92%</td><td><span class="badge b-amber">취업준비중</span></td><td style="color:#888;font-size:12px">05.26</td><td><button class="action-btn" onclick="showToast('김이음 상세 페이지')">상세</button></td></tr>
+        <tr><td style="font-weight:500">박하늘</td><td><span class="badge b-purple">5단계</span></td><td>85%</td><td><span class="badge b-amber">면접준비중</span></td><td style="color:#888;font-size:12px">05.25</td><td><button class="action-btn" onclick="showToast('박하늘 상세 페이지')">상세</button></td></tr>
+        <tr><td style="font-weight:500">이서연</td><td><span class="badge b-green">취업완료</span></td><td>97%</td><td><span class="badge b-green">취업성공</span></td><td style="color:#888;font-size:12px">05.20</td><td><button class="action-btn" onclick="showToast('이서연 상세 페이지')">상세</button></td></tr>
+        <tr><td style="font-weight:500">최민준</td><td><span class="badge b-purple">2단계</span></td><td>71%</td><td><span class="badge b-amber">취업준비중</span></td><td style="color:#888;font-size:12px">05.24</td><td><button class="action-btn" onclick="showToast('최민준 상세 페이지')">상세</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== PAGE 2: 참여자 전체 목록 ===== -->
+<div class="page" id="page-table">
+  <div class="grid4">
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:#888;margin-bottom:4px">전체 참여자</div><div style="font-size:22px;font-weight:500" id="sum-total2">10명</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:#888;margin-bottom:4px">취업 완료</div><div style="font-size:22px;font-weight:500;color:#27500A" id="sum-emp2">3명</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:#888;margin-bottom:4px">평균 제출률</div><div style="font-size:22px;font-weight:500" id="sum-sub2">84%</div></div>
+    <div class="card" style="padding:14px 16px"><div style="font-size:11px;color:#888;margin-bottom:4px">평균 출석률</div><div style="font-size:22px;font-weight:500" id="sum-att2">88%</div></div>
+  </div>
+  <div class="card">
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <input type="text" id="search2" placeholder="이름 또는 기업 검색..." style="flex:1;min-width:160px;padding:7px 12px;font-size:13px;border:0.5px solid #ccc;border-radius:8px">
+      <select id="f-stage2" style="padding:7px 10px;font-size:13px;border:0.5px solid #ccc;border-radius:8px">
+        <option value="">전체 단계</option>
+        <option>1단계</option><option>2단계</option><option>3단계</option><option>4단계</option><option>5단계</option><option>취업완료</option>
+      </select>
+      <select id="f-status2" style="padding:7px 10px;font-size:13px;border:0.5px solid #ccc;border-radius:8px">
+        <option value="">전체 현황</option>
+        <option>취업준비중</option><option>면접준비중</option><option>취업성공</option><option>이탈위험</option>
+      </select>
+      <span style="font-size:12px;color:#888;margin-left:auto;align-self:center" id="row-count2">10명 표시 중</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table style="table-layout:fixed">
+        <colgroup>
+          <col style="width:80px"><col style="width:48px"><col style="width:72px"><col style="width:68px"><col style="width:68px"><col style="width:120px"><col style="width:88px"><col style="width:64px"><col style="width:60px"><col style="width:52px">
+        </colgroup>
+        <thead><tr>
+          <th onclick="sortTable2('name')">이름</th>
+          <th onclick="sortTable2('age')">나이</th>
+          <th onclick="sortTable2('stageN')">단계</th>
+          <th onclick="sortTable2('submit')">제출률</th>
+          <th onclick="sortTable2('attend')">출석률</th>
+          <th>지원 기업</th>
+          <th onclick="sortTable2('status')">취업현황</th>
+          <th onclick="sortTable2('mentor')">멘토링</th>
+          <th onclick="sortTable2('last')">최근활동</th>
+          <th></th>
+        </tr></thead>
+        <tbody id="tbody2"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE 3: 참여자 대시보드 ===== -->
+<div class="page" id="page-participant">
+  <div class="greeting">
+    <div style="font-size:15px;margin-bottom:4px">김이음님, 오늘도 성장하고 있어요 <i class="ti ti-flame" style="color:#FFD166"></i></div>
+    <div style="font-size:22px;font-weight:500;margin-bottom:16px">오늘도 <span style="color:#FFD166">화이팅!</span></div>
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">출석률</div><div class="kpi-val">92%</div><div class="kpi-delta">▲ 8%</div></div>
+      <div class="kpi"><div class="kpi-label">과제 제출률</div><div class="kpi-val">85%</div><div class="kpi-delta">▲ 6%</div></div>
+      <div class="kpi"><div class="kpi-label">멘토링 참여</div><div class="kpi-val">7회</div><div class="kpi-delta">▲ 2회</div></div>
+      <div class="kpi"><div class="kpi-label">취업준비도</div><div class="kpi-val">Lv.7</div><div class="kpi-delta">▲ 1Lv.</div></div>
+      <div class="kpi"><div class="kpi-label">보유 포인트</div><div class="kpi-val" style="font-size:15px">12,450P</div><div class="kpi-delta">이번 주 +300</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-title"><i class="ti ti-map-pin"></i> 나의 취업준비 진행도</div>
+    <div class="stage-track">
+      <div class="stage-step done"><div class="stage-dot"><i class="ti ti-check" style="font-size:12px"></i></div><div class="stage-label">1. 자기이해</div></div>
+      <div class="stage-step done"><div class="stage-dot"><i class="ti ti-check" style="font-size:12px"></i></div><div class="stage-label">2. 역량개발</div></div>
+      <div class="stage-step done"><div class="stage-dot"><i class="ti ti-check" style="font-size:12px"></i></div><div class="stage-label">3. 취업준비</div></div>
+      <div class="stage-step current"><div class="stage-dot">4</div><div class="stage-label">4. 취업실행</div></div>
+      <div class="stage-step"><div class="stage-dot">5</div><div class="stage-label">5. 사후관리</div></div>
+    </div>
+  </div>
+
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-target"></i> 주간 미션</div>
+      <div class="mission-item">
+        <div class="mission-check done" onclick="toggleMission(this)"><i class="ti ti-check" style="font-size:11px"></i></div>
+        <div><div class="mission-text done">자기소개서 과제 제출하기</div><div class="mission-due">마감 05.30(금)</div></div>
+      </div>
+      <div class="mission-item">
+        <div class="mission-check" onclick="toggleMission(this)"></div>
+        <div><div class="mission-text">면접 준비 영상 시청</div><div class="mission-due urgent">마감 오늘</div></div>
+      </div>
+      <div class="mission-item">
+        <div class="mission-check" onclick="toggleMission(this)"></div>
+        <div><div class="mission-text">멘토링 일정 잡기</div><div class="mission-due">마감 05.31(토)</div></div>
+      </div>
+      <div style="margin-top:10px;font-size:12px;color:#888" id="mission-count-p">1 / 3 완료</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-clock"></i> 최근 활동</div>
+      <div class="activity-item"><div class="act-icon"><i class="ti ti-file-text"></i></div><div><div style="font-size:13px">과제 "자기소개서2고" 제출</div><div style="font-size:11px;color:#888;margin-top:1px">오늘 05:26</div></div></div>
+      <div class="activity-item"><div class="act-icon"><i class="ti ti-users"></i></div><div><div style="font-size:13px">멘토링 상담 완료</div><div style="font-size:11px;color:#888;margin-top:1px">05.24</div></div></div>
+      <div class="activity-item"><div class="act-icon"><i class="ti ti-building"></i></div><div><div style="font-size:13px">입사지원 (주)아이엠테크</div><div style="font-size:11px;color:#888;margin-top:1px">05.23</div></div></div>
+      <div class="activity-item"><div class="act-icon"><i class="ti ti-check"></i></div><div><div style="font-size:13px">면접 준비 완료</div><div style="font-size:11px;color:#888;margin-top:1px">05.22</div></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><i class="ti ti-briefcase"></i> 맞춤 채용 추천</div>
+      <div class="job-card"><div><div style="font-size:13px;font-weight:500">(주)아이엠테크 신입 채용</div><div style="font-size:11px;color:#888;margin-top:2px">IT · 경북 구미</div></div><span class="badge b-red">D-5</span></div>
+      <div class="job-card"><div><div style="font-size:13px;font-weight:500">(주)프라이드솔루션 채용</div><div style="font-size:11px;color:#888;margin-top:2px">제조 · 경북 포항</div></div><span class="badge b-amber">D-8</span></div>
+      <div class="job-card"><div><div style="font-size:13px;font-weight:500">경북PRIDE기업 협력 채용</div><div style="font-size:11px;color:#888;margin-top:2px">유통 · 경북 안동</div></div><span class="badge b-purple">상시</span></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-chart-line"></i> 나의 성장 그래프</div>
+      <div class="prog-row"><div class="prog-label">출석률</div><div class="prog-bg"><div class="prog-fill-bar g" style="width:92%"></div></div><div class="prog-val">92%</div></div>
+      <div class="prog-row"><div class="prog-label">과제제출</div><div class="prog-bg"><div class="prog-fill-bar" style="width:85%"></div></div><div class="prog-val">85%</div></div>
+      <div class="prog-row"><div class="prog-label">멘토링</div><div class="prog-bg"><div class="prog-fill-bar" style="width:70%"></div></div><div class="prog-val">70%</div></div>
+      <div class="prog-row"><div class="prog-label">취업활동</div><div class="prog-bg"><div class="prog-fill-bar a" style="width:55%"></div></div><div class="prog-val">55%</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-star"></i> 성장 포인트</div>
+      <div style="font-size:32px;font-weight:500;color:#5B4FCF">12,450 P</div>
+      <div style="font-size:12px;color:#888;margin-top:2px">다음 레벨까지 550P 남았어요</div>
+      <div style="margin-top:8px;height:5px;background:#f0eef8;border-radius:3px;overflow:hidden"><div style="width:96%;height:100%;background:#5B4FCF;border-radius:3px"></div></div>
+      <div style="margin-top:12px">
+        <div class="ph-item"><span style="color:#888">과제 제출</span><span class="ph-plus">+100P</span></div>
+        <div class="ph-item"><span style="color:#888">멘토링 참여</span><span class="ph-plus">+150P</span></div>
+        <div class="ph-item"><span style="color:#888">출석 7일 연속</span><span class="ph-plus">+50P</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 참여자 추가 모달 -->
+<div class="modal-backdrop" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title">참여자 추가</div>
+    <label>이름</label><input type="text" id="new-name" placeholder="홍길동">
+    <label>현재 단계</label>
+    <select id="new-stage">
+      <option>1단계 - 자기이해</option><option>2단계 - 역량개발</option><option>3단계 - 취업준비</option><option>4단계 - 취업실행</option><option>5단계 - 사후관리</option>
+    </select>
+    <label>취업현황</label>
+    <select id="new-status"><option>취업준비중</option><option>면접준비중</option><option>취업성공</option></select>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-primary" onclick="addParticipant()">추가</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// 참여자 데이터
+const DATA=[
+  {name:'김이음',age:26,stage:'4단계',stageN:4,submit:92,attend:95,job:'(주)아이엠테크',status:'취업준비중',mentor:7,last:'05.26'},
+  {name:'박하늘',age:28,stage:'5단계',stageN:5,submit:85,attend:88,job:'(주)프라이드솔루션',status:'면접준비중',mentor:5,last:'05.25'},
+  {name:'이서연',age:25,stage:'취업완료',stageN:6,submit:97,attend:99,job:'경북PRIDE기업',status:'취업성공',mentor:9,last:'05.20'},
+  {name:'최민준',age:29,stage:'2단계',stageN:2,submit:71,attend:80,job:'미정',status:'취업준비중',mentor:3,last:'05.24'},
+  {name:'정유진',age:27,stage:'3단계',stageN:3,submit:88,attend:91,job:'(주)테크노파크',status:'취업준비중',mentor:6,last:'05.23'},
+  {name:'강다온',age:24,stage:'취업완료',stageN:6,submit:94,attend:96,job:'대경이앤씨',status:'취업성공',mentor:8,last:'05.15'},
+  {name:'윤시우',age:30,stage:'1단계',stageN:1,submit:55,attend:70,job:'미정',status:'이탈위험',mentor:1,last:'05.10'},
+  {name:'임채원',age:26,stage:'4단계',stageN:4,submit:82,attend:85,job:'(주)클라우드원',status:'면접준비중',mentor:6,last:'05.22'},
+  {name:'한소율',age:27,stage:'취업완료',stageN:6,submit:96,attend:98,job:'경북창조경제혁신센터',status:'취업성공',mentor:10,last:'05.18'},
+  {name:'오준혁',age:28,stage:'3단계',stageN:3,submit:78,attend:83,job:'미정',status:'취업준비중',mentor:4,last:'05.21'},
+];
+let filtered2=[...DATA];
+let sortCol2=null,sortDir2=1;
+
+// 페이지 전환
+function switchPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  const idx={admin:0,table:1,participant:2}[id];
+  document.querySelectorAll('.page-tab')[idx].classList.add('active');
+}
+
+// 토스트
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+// 모달
+function openModal(){document.getElementById('modal').classList.add('open')}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+
+// 참여자 추가
+function addParticipant(){
+  const name=document.getElementById('new-name').value.trim();
+  if(!name){showToast('이름을 입력해주세요');return}
+  const stage=document.getElementById('new-stage').value.split(' ')[0];
+  const stageN=parseInt(stage.replace('단계',''));
+  const status=document.getElementById('new-status').value;
+  const newP={name,age:'-',stage,stageN,submit:0,attend:0,job:'미정',status,mentor:0,last:'오늘'};
+  DATA.push(newP);
+  filtered2=[...DATA];
+  renderTable2();
+  const cur=parseInt(document.getElementById('hero-count').textContent);
+  document.getElementById('hero-count').textContent=cur+1;
+  document.getElementById('stat-total').textContent=(cur+1)+'명';
+  closeModal();
+  showToast(name+' 참여자가 추가되었습니다');
+  document.getElementById('new-name').value='';
+}
+
+// 테이블2 렌더
+function stageBadge(s){
+  if(s==='취업완료') return `<span class="badge b-green">${s}</span>`;
+  return `<span class="badge b-purple">${s}</span>`;
+}
+function statusBadge(s){
+  const m={취업성공:'b-green',면접준비중:'b-amber',이탈위험:'b-red',취업준비중:'b-gray'};
+  return `<span class="badge ${m[s]||'b-gray'}">${s}</span>`;
+}
+function renderTable2(){
+  const tb=document.getElementById('tbody2');
+  if(!filtered2.length){tb.innerHTML=`<tr><td colspan="10" style="text-align:center;padding:28px;color:#aaa">검색 결과가 없습니다</td></tr>`;return;}
+  tb.innerHTML=filtered2.map(r=>`<tr>
+    <td style="font-weight:500">${r.name}</td>
+    <td>${r.age}${r.age!=='-'?'세':''}</td>
+    <td>${stageBadge(r.stage)}</td>
+    <td>${r.submit}%</td>
+    <td>${r.attend}%</td>
+    <td style="color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.job}</td>
+    <td>${statusBadge(r.status)}</td>
+    <td>${r.mentor}회</td>
+    <td style="color:#888">${r.last}</td>
+    <td><button class="action-btn" onclick="showToast('${r.name} 상세 페이지')">상세</button></td>
+  </tr>`).join('');
+  document.getElementById('row-count2').textContent=filtered2.length+'명 표시 중';
+  const emp=filtered2.filter(r=>r.status==='취업성공').length;
+  document.getElementById('sum-total2').textContent=filtered2.length+'명';
+  document.getElementById('sum-emp2').textContent=emp+'명';
+  const avgS=filtered2.length?Math.round(filtered2.reduce((a,r)=>a+(r.submit||0),0)/filtered2.length):0;
+  const avgA=filtered2.length?Math.round(filtered2.reduce((a,r)=>a+(r.attend||0),0)/filtered2.length):0;
+  document.getElementById('sum-sub2').textContent=avgS+'%';
+  document.getElementById('sum-att2').textContent=avgA+'%';
+}
+function applyFilter2(){
+  const q=document.getElementById('search2').value.toLowerCase();
+  const fs=document.getElementById('f-stage2').value;
+  const ft=document.getElementById('f-status2').value;
+  filtered2=DATA.filter(r=>{
+    const mq=!q||r.name.includes(q)||r.job.toLowerCase().includes(q);
+    const ms=!fs||r.stage===fs;
+    const mt=!ft||r.status===ft;
+    return mq&&ms&&mt;
+  });
+  if(sortCol2) doSort2(sortCol2,false);
+  else renderTable2();
+}
+function doSort2(col,toggle=true){
+  if(toggle){sortDir2=(sortCol2===col)?-sortDir2:1;sortCol2=col;}
+  filtered2.sort((a,b)=>{
+    const va=a[col],vb=b[col];
+    return(typeof va==='number'?(va-vb):String(va).localeCompare(String(vb)))*sortDir2;
+  });
+  renderTable2();
+}
+function sortTable2(col){doSort2(col)}
+document.getElementById('search2').addEventListener('input',applyFilter2);
+document.getElementById('f-stage2').addEventListener('change',applyFilter2);
+document.getElementById('f-status2').addEventListener('change',applyFilter2);
+
+// 미션 토글
+function toggleMission(el){
+  el.classList.toggle('done');
+  const txt=el.parentElement.querySelector('.mission-text');
+  txt.classList.toggle('done');
+  el.innerHTML=el.classList.contains('done')?'<i class="ti ti-check" style="font-size:11px"></i>':'';
+  const checks=document.querySelectorAll('#page-participant .mission-check');
+  const done=[...checks].filter(c=>c.classList.contains('done')).length;
+  document.getElementById('mission-count-p').textContent=done+' / '+checks.length+' 완료';
+}
+
+renderTable2();
+</script>
+</body>
+</html>
